@@ -147,3 +147,52 @@ make proto
 
 - Designed for local network / air-gapped usage.
 - REST/WebSocket and gRPC run side-by-side on the same backend service layer.
+
+## Environment
+
+Common environment variables used by the project:
+
+- Backend
+  - `NCHAT_HTTP_ADDR` (default `:8080`) — HTTP API listener address.
+  - `NCHAT_GRPC_ADDR` (default `:9090`) — gRPC listener address.
+  - `NCHAT_DB_PATH` (default `./nchat.db`) — SQLite persistence file path.
+  - `NCHAT_MAX_REQUEST_BODY_BYTES` — backend request size limit.
+  - `NCHAT_MAX_RECIPIENTS` — maximum recipients in a message.
+
+- Frontend
+  - `VITE_NCHAT_API_BASE` — explicit API base URL (e.g. `http://localhost:8080`).
+  - `VITE_NCHAT_WS_URL` — explicit WebSocket URL (e.g. `ws://localhost:8080/ws`).
+
+## Development
+
+Recommended workflow for local development:
+
+```bash
+# backend
+cd backend
+cp .env.example .env
+go mod tidy
+make backend
+
+# frontend
+cd ../frontend
+cp .env.example .env
+npm install
+npm run dev
+```
+
+The repository includes a convenience launcher (`make launch`) to start both frontend and backend together.
+
+## Contributing
+
+Contributions welcome. Recommended process:
+
+1. Open an issue describing the change or feature.
+2. Create a feature branch from `main` and open a pull request with tests and explanations.
+3. Keep changes focused and include documentation updates for user-facing behavior.
+
+Please follow existing project coding style and include unit/regression tests where appropriate.
+
+## License
+
+This project is released under the MIT License. See `LICENSE` for details.
