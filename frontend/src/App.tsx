@@ -340,6 +340,9 @@ export default function App() {
       return defaultFileLibraryConfig;
     }
   });
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createAudience, setCreateAudience] = useState<ChatAudience>("private");
+  const [createPartnerInput, setCreatePartnerInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [storedClientId, setStoredClientId] = useState<string>(() => localStorage.getItem(SESSION_CLIENT_ID_KEY) ?? "");
 
@@ -1451,6 +1454,7 @@ export default function App() {
             <div className="sidebar-title-row">
               <h2>{sidebarTitle}</h2>
               <span className="count-badge">{sidebarCount}</span>
+              <button type="button" className="theme-btn create-btn" onClick={() => setShowCreateModal(true)} aria-label="Create chat">Create</button>
             </div>
             <button
               type="button"
@@ -1735,6 +1739,30 @@ export default function App() {
             </>
           ) : null}
         </aside>
+
+        {showCreateModal ? (
+          <div className="modal-backdrop" role="dialog" aria-modal="true">
+            <div className="modal-panel">
+              <h3>Create Chat</h3>
+              <form onSubmit={(e) => { e.preventDefault(); const ids = createPartnerInput.split(",").map(s => s.trim()).filter(Boolean); setSelectedPartnerIds(ids); setChatAudience(createAudience); setShowCreateModal(false); setSidebarCollapsed(false); }}>
+                <label>Type</label>
+                <select value={createAudience} onChange={(e) => setCreateAudience(e.target.value as ChatAudience)}>
+                  <option value="private">Private</option>
+                  <option value="group">Group</option>
+                  <option value="public">Public</option>
+                </select>
+
+                <label>Partner IDs (comma-separated)</label>
+                <input value={createPartnerInput} onChange={(e) => setCreatePartnerInput(e.target.value)} placeholder="clientId1, clientId2" />
+
+                <div className="modal-actions">
+                  <button type="submit" className="theme-btn">Create</button>
+                  <button type="button" className="theme-btn" onClick={() => setShowCreateModal(false)}>Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        ) : null}
 
         <section className="chat-stage">
           <header className="topbar">
